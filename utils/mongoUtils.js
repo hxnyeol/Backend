@@ -1,4 +1,5 @@
-const mongoURI = "mongodb://localhost:27017/travel-planner"; // local server
+const mongoURI =
+  "mongodb+srv://dev:dev7896@cluster0.ddockvv.mongodb.net/travel-planner"; // local server
 const mongoose = require("mongoose");
 const connectMongoDBServer = async () => {
   mongoose
@@ -8,7 +9,7 @@ const connectMongoDBServer = async () => {
       //   mongoose.disconnect();
     })
     .catch((err) => {
-      console.log("some error", e);
+      console.log("some error", err);
     });
 };
 
