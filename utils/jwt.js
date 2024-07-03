@@ -1,5 +1,4 @@
 const { sign, verify } = require("jsonwebtoken");
-const Cookies = require("js-cookie");
 
 const createToken = (user) => {
   const accessToken = sign(
@@ -10,24 +9,25 @@ const createToken = (user) => {
 };
 
 const verifyToken = (req, res, next) => {
-  if (!req.header.authorization) {
+  if (!req.headers.authorization) {
     res.status(400).json({ error: "User Not Authenticated" });
+    return;
   }
-  console.log("went through");
 
   const accessToken = req.headers.authorization.split(" ")[1];
   if (!accessToken) {
     res.status(400).json({ error: "User Not Authenticated" });
+    return;
   }
   try {
     const valid_token = verify(accessToken, "useaenvkey");
     if (valid_token) {
-      req.authenticated = true; // Make sure you inform others
+      req.authenticated = true;
+      req.cookies["access-token"] = accessToken;
       next();
-      return;
     }
   } catch (e) {
-    res.status(400).json({ error: e });
+    res.status(400).json({ error: "Authentication Failed" });
   }
 };
 

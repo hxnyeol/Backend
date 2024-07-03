@@ -36,19 +36,21 @@ router.post("/add-travel", verifyToken, async (req, res) => {
 // display all items of user
 router.get("/list-travel", verifyToken, async (req, res) => {
   try {
+    console.log("access-token", req.cookies["access-token"]);
     const decoded = verify(req.cookies["access-token"], "useaenvkey");
     // populate is used to access
 
     const user = await User.findById({ _id: decoded.id }).populate("trips");
 
     if (!user) {
-      res.status(400).json({ error: "User Load Failed" });
+      return res.status(400).json({ error: "User Load Failed" });
     }
 
     console.log(user.trips);
-    res.send(user.trips);
+    return res.send(user.trips);
   } catch (e) {
     res.status(400).json({ error: e.message });
+    console.log(e);
   }
 });
 
