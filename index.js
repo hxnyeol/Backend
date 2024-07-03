@@ -48,9 +48,7 @@ app.get("/testing", (req, res) => {
 });
 
 // for testing purposes
-app.get("/secret", (req, res) => {
-  res.send("this is topsecret!");
-});
+
 app.get("/data", (req, res) => {
   res.json({ item: "some crucial info" });
 });

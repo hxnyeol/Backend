@@ -19,14 +19,23 @@ router.post("/add-travel", verifyToken, async (req, res) => {
     const decoded = verify(req.cookies["access-token"], "useaenvkey");
     // const username = decoded.username;
     // const {start, destination, startDate, endDate, modeOfTravel, activities, notes, bookmarked} = req.body;
+    console.log(decoded);
+    console.log(req.body);
+
     const user = await findUserById(decoded.id);
+    console.log(user);
     const tripObject = new Trip(req.body);
     await tripObject.save();
+    console.log("1");
     user.trips.push(tripObject);
+
     await user.save();
+    console.log("1");
     res.json("Success");
+    return;
   } catch (e) {
     res.status(400).json({ error: e.message });
+    return;
   }
 
   // item.trips.append;
@@ -39,7 +48,7 @@ router.get("/list-travel", verifyToken, async (req, res) => {
     console.log("access-token", req.cookies["access-token"]);
     const decoded = verify(req.cookies["access-token"], "useaenvkey");
     // populate is used to access
-
+    console.log(decoded);
     const user = await User.findById({ _id: decoded.id }).populate("trips");
 
     if (!user) {
@@ -51,36 +60,44 @@ router.get("/list-travel", verifyToken, async (req, res) => {
   } catch (e) {
     res.status(400).json({ error: e.message });
     console.log(e);
+    return;
   }
 });
 
-router.post("/add-trips", async (req, res) => {
-  const item = new Trip({
-    destination: "Paris, France",
-    startDate: new Date("2024-08-15"),
-    endDate: new Date("2024-08-22"),
-    modeOfTravel: "Plane",
-    activities: [
-      "Visit Eiffel Tower",
-      "Explore Louvre Museum",
-      "Seine River Cruise",
-      "Enjoy French cuisine",
-    ],
-    notes:
-      "Pack comfortable shoes for walking tours. Try to learn some basic French phrases.",
-    bookmarked: false,
-  });
-
-  await item.save(); // save to the database
-  res.json({ something: true });
+// remove later
+router.post("/myroute", verifyToken, (req, res) => {
+  console.log(req.body);
+  res.json("done");
+  return;
 });
 
 router.post("/edit-details", (req, res) => {});
 
 router.put("/update-details", (req, res) => {});
 
-router.delete("/delete-details", (req, res) => {
-  const { _id } = req.body;
+router.delete("/travel-items/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log(id);
+    const profile = await User.findOneAndUpdate(
+      { trips: id },
+      { $pull: { trips: id } },
+      { new: true }
+    );
+
+    if (!profile) {
+      res.status(404).json({ error: "the specified User does not exist" });
+
+      return;
+    }
+
+    await Trip.findByIdAndDelete(id);
+
+    res.json("worked");
+    return;
+  } catch (e) {
+    res.status(400).json({ error: "Issue in deletion" });
+  }
 });
 
 module.exports = router;
