@@ -1,5 +1,5 @@
-const mongoURI =
-  "mongodb+srv://dev:dev123@chat-cluster.shsepp2.mongodb.net/travel-planner"; // local server
+require("dotenv").config();
+const mongoURI = process.env.MONGO_URL; // local server
 const mongoose = require("mongoose");
 const connectMongoDBServer = async () => {
   mongoose

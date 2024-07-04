@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
-const mongoURI =
-  "mongodb+srv://dev:dev123@chat-cluster.shsepp2.mongodb.net/travel-planner"; // local server
+const mongoURI = ""; // local server
 
 const connectMongoDBServer = async () => {
   mongoose
