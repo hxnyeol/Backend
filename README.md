@@ -11,4 +11,4 @@ This project utilizes a MongoDB database for storing data. To facilitate a secur
 **Adding the `MONGO_URL` Variable:**
 
 1. **Access the `.env` File:** Open the `.env` file you just created in your text editor.
-2. **Add the Variable:** Inside the file, add a single line adhering to the following format:
+2. **Add the Variable:** Inside the file, add a single line adhering to the following format MONGO_URL="YOUR_URL from compass/cluster"
