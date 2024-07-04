@@ -71,17 +71,25 @@ router.post("/myroute", verifyToken, (req, res) => {
   return;
 });
 
-router.post("/edit-details", (req, res) => {});
+router.post("/edit-details/:id", (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  res.json(id);
+  return;
+});
 
 router.put("/update-details", (req, res) => {});
 
 // testing for failure
 router.delete("/travel-items/:id", verifyToken, async (req, res) => {
   try {
-    const session = await mongoose.startSession();
-    session.startTransaction();
+    console.log("access-token", req.cookies["access-token"]);
+    const decoded = verify(req.cookies["access-token"], "useaenvkey");
+    console.log(decoded.username);
+
+    // core logic
     const { id } = req.params;
-    console.log("debugger", id);
+    console.log("to delete", id);
     const profile = await User.findOneAndUpdate(
       { trips: id },
       { $pull: { trips: id } },
@@ -96,13 +104,14 @@ router.delete("/travel-items/:id", verifyToken, async (req, res) => {
 
     await Trip.findByIdAndDelete(id);
     console.log("debugger", "delete");
-    await session.commitTransaction();
-    session.endSession();
+    // await session.commitTransaction();
+    // session.endSession();
     console.log("debugger", "complete");
     res.json("Successs");
     return;
   } catch (e) {
     res.status(400).json({ error: "Issue in deletion request" });
+    return;
   }
 });
 
