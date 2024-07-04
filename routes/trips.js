@@ -78,7 +78,11 @@ router.post("/edit-details/:id", (req, res) => {
   return;
 });
 
+// handle form update logic
 router.put("/update-details", (req, res) => {});
+
+// Handle Bookmark Logic
+router.patch("/travel-items/:id", verifyToken, async (req, res) => {});
 
 // testing for failure
 router.delete("/travel-items/:id", verifyToken, async (req, res) => {

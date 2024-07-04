@@ -15,5 +15,5 @@ const connectMongoDBServer = async () => {
 };
 
 connectMongoDBServer().then(() => {
-  console.log("ITS WORKING");
+  console.log("MONGO WORKING");
 });
