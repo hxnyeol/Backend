@@ -75,28 +75,34 @@ router.post("/edit-details", (req, res) => {});
 
 router.put("/update-details", (req, res) => {});
 
-router.delete("/travel-items/:id", async (req, res) => {
+// testing for failure
+router.delete("/travel-items/:id", verifyToken, async (req, res) => {
   try {
+    const session = await mongoose.startSession();
+    session.startTransaction();
     const { id } = req.params;
-    console.log(id);
+    console.log("debugger", id);
     const profile = await User.findOneAndUpdate(
       { trips: id },
       { $pull: { trips: id } },
       { new: true }
     );
+    console.log("debugger", profile);
 
     if (!profile) {
       res.status(404).json({ error: "the specified User does not exist" });
-
       return;
     }
 
     await Trip.findByIdAndDelete(id);
-
-    res.json("worked");
+    console.log("debugger", "delete");
+    await session.commitTransaction();
+    session.endSession();
+    console.log("debugger", "complete");
+    res.json("Successs");
     return;
   } catch (e) {
-    res.status(400).json({ error: "Issue in deletion" });
+    res.status(400).json({ error: "Issue in deletion request" });
   }
 });
 

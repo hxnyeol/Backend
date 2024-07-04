@@ -30,6 +30,7 @@ app.use(
     credentials: true,
   })
 );
+
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
   res.setHeader(
@@ -48,6 +49,10 @@ app.get("/testing", (req, res) => {
 });
 
 // for testing purposes
+app.get("/travel-items/:id", (req, res) => {
+  const { id } = req.params;
+  res.send(id);
+});
 
 app.get("/data", (req, res) => {
   res.json({ item: "some crucial info" });
