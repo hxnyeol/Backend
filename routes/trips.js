@@ -17,8 +17,6 @@ const findUserById = async (id) => {
 router.post("/add-travel", verifyToken, async (req, res) => {
   try {
     const decoded = verify(req.cookies["access-token"], "useaenvkey");
-    // const username = decoded.username;
-    // const {start, destination, startDate, endDate, modeOfTravel, activities, notes, bookmarked} = req.body;
     console.log(decoded);
     console.log(req.body);
 
@@ -37,9 +35,6 @@ router.post("/add-travel", verifyToken, async (req, res) => {
     res.status(400).json({ error: e.message });
     return;
   }
-
-  // item.trips.append;
-  // res.json();
 });
 
 // display all items of user
@@ -81,9 +76,6 @@ router.post("/edit-details/:id", (req, res) => {
 // handle form update logic
 router.put("/update-details", (req, res) => {});
 
-// Handle Bookmark Logic
-router.patch("/travel-items/:id", verifyToken, async (req, res) => {});
-
 // testing for failure
 router.delete("/travel-items/:id", verifyToken, async (req, res) => {
   try {
@@ -115,6 +107,25 @@ router.delete("/travel-items/:id", verifyToken, async (req, res) => {
     return;
   } catch (e) {
     res.status(400).json({ error: "Issue in deletion request" });
+    return;
+  }
+});
+
+router.patch("/travel-items/:id", verifyToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const tripItem = await Trip.findById(id);
+    if (!tripItem) {
+      return res.status(404).json({ error: "Trip item not found" });
+    }
+
+    tripItem.bookmarked = !tripItem.bookmarked;
+
+    await tripItem.save();
+    res.json("Success");
+    return;
+  } catch (e) {
+    res.status(400).json({ error: "Issue in patching request" });
     return;
   }
 });
